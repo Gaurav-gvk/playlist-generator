@@ -1,7 +1,7 @@
+import requests
 from urllib.parse import urlparse
 from bs4 import BeautifulSoup
 from . import BaseService
-import requests
 import re
 
 
@@ -59,6 +59,10 @@ class DaddyHD(BaseService):
         iframe_pattern = r"source:'(https:\/\/[^\s']+)'"
 
         matches = re.findall(iframe_pattern, iframe_source)
+
+        # Ensure that matches contain at least two items before proceeding
+        if len(matches) < 2:
+            raise ValueError(f"Expected at least two matches, but found {len(matches)} matches.")
 
         config_endpoint = matches[1].replace("1", "STREAM-ID")
 
