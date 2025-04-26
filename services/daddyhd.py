@@ -57,8 +57,26 @@ class DaddyHD(BaseService):
             "Referer": f"{parsed_embed.scheme}://{parsed_embed.netloc}/"})
         iframe_source = iframe_response.text
 
-        # Log iframe_source to understand its structure
-        print(f"Iframe source:\n{iframe_source}")  # Add this line for debugging
+        # Print iframe_source to inspect its structure
+        print(f"Iframe source:\n{iframe_source}")  # Log iframe source to check structure
 
-        # Updated regex pattern
-        iframe_pattern = r_
+        iframe_pattern = r"source\s*:\s*'(https:\/\/[^\s']+)'"
+
+        matches = re.findall(iframe_pattern, iframe_source)
+        print(f"Matches found: {matches}")  # Log matches to inspect what was found
+
+        # Check if there are at least two matches
+        if len(matches) < 2:
+            # Print a detailed error message if not enough matches are found
+            print(f"Error: Expected at least two matches, but found {len(matches)}.")
+            raise ValueError(f"Expected at least two matches, but found {len(matches)} matches.")
+
+        # If there are enough matches, replace "1" with "STREAM-ID"
+        config_endpoint = matches[1].replace("1", "STREAM-ID")
+
+        config = {
+            "endpoint": config_endpoint,
+            "referer": f"{iframe_parsed.scheme}://{iframe_parsed.netloc}/"
+        }
+
+        return config
