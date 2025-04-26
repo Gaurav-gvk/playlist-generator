@@ -1,4 +1,4 @@
-name: Playlist-Generator workflow
+name: Playlist-Generator
 
 on:
   schedule:
@@ -7,6 +7,7 @@ on:
     branches:
       - master
       - main
+  workflow_dispatch:  # This line enables manual triggering
 
 jobs:
   build:
@@ -15,7 +16,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Set up Python
-
         uses: actions/setup-python@v4
         with:
           python-version: "3.11"
@@ -32,3 +32,4 @@ jobs:
           git add playlists
           git commit -m "Updated via AutoBot 🤖" || echo "No changes to commit"
           git push
+
